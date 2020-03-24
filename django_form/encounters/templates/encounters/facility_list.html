@@ -1,0 +1,35 @@
+{% extends 'encounters/base.html' %}
+
+{% load static %}
+{% load bootstrap4 %}
+
+{% block title %}
+facilities
+{% endblock %}
+
+{% block content %}
+
+<a role="button" href="{% url 'facilities-create' %}" class="btn btn-primary">
+new facility
+</a>
+
+<form action="{% url 'facilities-list' %}" method="get">
+  <input name="q" type="text" placeholder="input name...">
+  {% buttons submit='search' %}
+  {% endbuttons %}
+</form>
+
+<ul>
+{% for facility in object_list %}
+<li>
+  <a href="{{ facility.get_absolute_url }}">{{ facility.name }}</a>
+  <a role="button" href="{{ facility.get_delete_url }}" class="btn btn-danger">
+  delete
+  </a>
+</li>
+{% empty %}
+<li>no facilities yet</li>
+{% endfor %}
+</ul>
+
+{% endblock %}

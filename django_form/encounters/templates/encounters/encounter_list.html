@@ -1,0 +1,37 @@
+{% extends 'encounters/base.html' %}
+
+{% load static %}
+{% load bootstrap4 %}
+
+{% block title %}
+encounters
+{% endblock %}
+
+{% block content %}
+
+<a role="button" href="{% url 'encounters-create' %}" class="btn btn-primary">
+new encounter
+</a>
+
+<form action="{% url 'encounters-list' %}" method="get">
+  <input name="q" type="text" placeholder="input name...">
+  {% buttons submit='search' %}
+  {% endbuttons %}
+</form>
+
+<ul>
+{% for encounter in object_list %}
+<li>
+  <a href="{{ encounter.get_absolute_url }}">
+    {{ encounter.created|date:"Y/m/d H:i" }} - {{ encounter.patient.name }}
+  </a>
+  <a role="button" href="{{ encounter.get_delete_url }}" class="btn btn-danger">
+  delete
+  </a>
+</li>
+{% empty %}
+<li>no encounters yet</li>
+{% endfor %}
+</ul>
+
+{% endblock %}

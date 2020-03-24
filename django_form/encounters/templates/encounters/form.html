@@ -1,0 +1,19 @@
+{% extends 'encounters/base.html' %}
+
+{% load static %}
+{% load bootstrap4 %}
+
+{% block title %}
+form
+{% endblock %}
+
+{% block content %}
+
+<form role="form" method="post" class="form">
+  {% csrf_token %}
+  {% bootstrap_form form %}
+  {% buttons submit='ok' %}
+  {% endbuttons %}
+</form>
+
+{% endblock %}

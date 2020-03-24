@@ -1,0 +1,35 @@
+{% extends 'encounters/base.html' %}
+
+{% load static %}
+{% load bootstrap4 %}
+
+{% block title %}
+physicians
+{% endblock %}
+
+{% block content %}
+
+<a role="button" href="{% url 'physicians-create' %}" class="btn btn-primary">
+new physician
+</a>
+
+<form action="{% url 'physicians-list' %}" method="get">
+  <input name="q" type="text" placeholder="input name...">
+  {% buttons submit='search' %}
+  {% endbuttons %}
+</form>
+
+<ul>
+{% for physician in object_list %}
+<li>
+  <a href="{{ physician.get_absolute_url }}">{{ physician.name }}</a>
+  <a role="button" href="{{ physician.get_delete_url }}" class="btn btn-danger">
+  delete
+  </a>
+</li>
+{% empty %}
+<li>no physicians yet</li>
+{% endfor %}
+</ul>
+
+{% endblock %}

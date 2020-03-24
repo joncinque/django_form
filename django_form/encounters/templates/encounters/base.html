@@ -1,0 +1,23 @@
+{% extends 'encounters/bootstrap.html' %}
+
+{% load bootstrap4 %}
+
+{% block bootstrap4_content %}
+<div class="container">
+  <h1>{% block title %}(no title){% endblock %}</h1>
+
+  <p>
+    <a href="{% url 'encounters-list' %}">encounters</a>
+    <a href="{% url 'patients-list' %}">patients</a>
+    <a href="{% url 'physicians-list' %}">physicians</a>
+    <a href="{% url 'facilities-list' %}">facilities</a>
+  </p>
+
+  {% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
+
+  {% block content %}(no content){% endblock %}
+
+  {% block footer %}<div id="footer"> </div>{% endblock %}
+</div>
+
+{% endblock %}
