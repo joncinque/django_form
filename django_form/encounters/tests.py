@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase
@@ -12,18 +12,31 @@ TEST_PATIENT1 = {
     'email': 'test1@patient.com',
     'ssn': 'xxx-xx-xxxx',
     'phone': '(xxx) xxx-xxxx',
+    'address': '123 Fake Street',
+    'city': 'Springfield',
+    'state': 'NV',
+    'zipcode': '10001',
+    'birthdate': date(1950, 12, 2),
 }
 TEST_PATIENT2 = {
     'name': 'TestPatient2',
     'email': 'test2@patient.com',
     'ssn': 'xxx-xx-xxxx',
     'phone': '(xxx) xxx-xxxx',
+    'address': '1 Real Lane',
+    'city': 'Spring',
+    'state': 'TX',
+    'zip': '10002',
 }
 TEST_PATIENT3 = {
     'name': 'TestPatient3',
     'email': 'test3@patient.com',
     'ssn': 'xxx-xx-xxxx',
     'phone': '(xxx) xxx-xxxx',
+    'address': '142 Some Street',
+    'city': 'Spring',
+    'state': 'TX',
+    'zip': '10002',
 }
 TEST_PATIENTS = [TEST_PATIENT1, TEST_PATIENT2, TEST_PATIENT3]
 

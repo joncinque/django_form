@@ -7,11 +7,34 @@ MAX_SSN_LENGTH = 15
 MAX_PHONE_LENGTH = 30
 
 
+class Sex(models.TextChoices):
+    MALE = 'Male'
+    FEMALE = 'Female'
+    OTHER = 'Other'
+    DECLINE = 'Decline to answer'
+
+
+class EncounterType(models.TextChoices):
+    INPATIENT = 'Inpatient'
+    OUTPATIENT_AMBULANCE = 'Outpatient Ambulance'
+    OUTPATIENT_OFFICE = 'Outpatient Office'
+
+
 class Patient(models.Model):
     name = models.CharField(max_length=MAX_NAME_LENGTH, db_index=True)
     email = models.EmailField(blank=True)
     ssn = models.CharField(max_length=MAX_SSN_LENGTH, blank=True)
+    address = models.CharField(max_length=MAX_NAME_LENGTH, blank=True)
+    city = models.CharField(max_length=MAX_NAME_LENGTH, blank=True)
+    state = models.CharField(max_length=MAX_NAME_LENGTH, blank=True)
+    zipcode = models.CharField(max_length=MAX_PHONE_LENGTH, blank=True)
     phone = models.CharField(max_length=MAX_PHONE_LENGTH, blank=True)
+    birthdate = models.DateField(blank=True, null=True)
+    sex = models.CharField(
+        max_length=MAX_PHONE_LENGTH,
+        choices=Sex.choices,
+        default=Sex.OTHER,
+    )
 
     def get_absolute_url(self):
         return reverse('patients-detail', args=[self.id])
@@ -30,9 +53,15 @@ class Patient(models.Model):
 
 class Facility(models.Model):
     name = models.CharField(max_length=MAX_NAME_LENGTH, db_index=True)
-    admin = models.CharField(max_length=MAX_NAME_LENGTH, blank=True)
-    address = models.CharField(max_length=MAX_ADDRESS_LENGTH, blank=True)
+    email = models.EmailField(blank=True)
+    taxid = models.CharField(max_length=MAX_SSN_LENGTH, blank=True)
+    address = models.CharField(max_length=MAX_NAME_LENGTH, blank=True)
+    city = models.CharField(max_length=MAX_NAME_LENGTH, blank=True)
+    state = models.CharField(max_length=MAX_NAME_LENGTH, blank=True)
+    zipcode = models.CharField(max_length=MAX_PHONE_LENGTH, blank=True)
     phone = models.CharField(max_length=MAX_PHONE_LENGTH, blank=True)
+    fax = models.CharField(max_length=MAX_PHONE_LENGTH, blank=True)
+    admin = models.CharField(max_length=MAX_NAME_LENGTH, blank=True)
 
     def get_absolute_url(self):
         return reverse('facilities-detail', args=[self.id])
@@ -51,8 +80,14 @@ class Facility(models.Model):
 
 class Physician(models.Model):
     name = models.CharField(max_length=MAX_NAME_LENGTH, db_index=True)
-    address = models.CharField(max_length=MAX_ADDRESS_LENGTH, blank=True)
+    email = models.EmailField(blank=True)
+    taxid = models.CharField(max_length=MAX_SSN_LENGTH, blank=True)
+    address = models.CharField(max_length=MAX_NAME_LENGTH, blank=True)
+    city = models.CharField(max_length=MAX_NAME_LENGTH, blank=True)
+    state = models.CharField(max_length=MAX_NAME_LENGTH, blank=True)
+    zipcode = models.CharField(max_length=MAX_PHONE_LENGTH, blank=True)
     phone = models.CharField(max_length=MAX_PHONE_LENGTH, blank=True)
+    fax = models.CharField(max_length=MAX_PHONE_LENGTH, blank=True)
 
     def get_absolute_url(self):
         return reverse('physicians-detail', args=[self.id])
@@ -70,12 +105,26 @@ class Physician(models.Model):
 
 
 class Encounter(models.Model):
+    requested_type = models.CharField(
+        max_length=MAX_PHONE_LENGTH,
+        choices=EncounterType.choices,
+        default=EncounterType.INPATIENT,
+    )
+    assigned_type = models.CharField(
+        max_length=MAX_PHONE_LENGTH,
+        choices=EncounterType.choices,
+        default=EncounterType.INPATIENT,
+    )
+
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     facility = models.ForeignKey(Facility, on_delete=models.CASCADE)
     physician = models.ForeignKey(Physician, on_delete=models.CASCADE)
-    charting = models.TextField()
+
     created = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
+
+    charting = models.TextField(blank=True)  # TODO formset
+    reviews = models.TextField(null=True, blank=True)  # TODO formset
 
     def get_absolute_url(self):
         return reverse('encounters-detail', args=[self.id])

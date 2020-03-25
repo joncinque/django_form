@@ -7,19 +7,19 @@ from .models import Patient, Physician, Facility, Encounter
 class PatientForm(forms.ModelForm):
     class Meta:
         model = Patient
-        fields = ('name', 'email', 'ssn', 'phone')
+        exclude = ()
 
 
 class PhysicianForm(forms.ModelForm):
     class Meta:
         model = Physician
-        fields = ('name', 'address', 'phone')
+        exclude = ()
 
 
 class FacilityForm(forms.ModelForm):
     class Meta:
         model = Facility
-        fields = ('name', 'admin', 'address', 'phone')
+        exclude = ()
 
 
 class EncounterForm(forms.ModelForm):
