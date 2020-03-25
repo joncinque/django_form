@@ -9,27 +9,25 @@ physicians
 
 {% block content %}
 
-<a role="button" href="{% url 'physicians-create' %}" class="btn btn-primary">
-new physician
-</a>
+<nav class="navbar navbar-light bg-light">
+  <a role="button" href="{% url 'physicians-create' %}" class="btn btn-primary">new</a>
+  <form action="{% url 'physicians-list' %}" method="get" class="form-inline">
+    <input name="q" class="form-control mr-sm-2" type="search" placeholder="search" aria-label="Search">
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">search</button>
+  </form>
+</nav>
 
-<form action="{% url 'physicians-list' %}" method="get">
-  <input name="q" type="text" placeholder="input name...">
-  {% buttons submit='search' %}
-  {% endbuttons %}
-</form>
-
-<ul>
-{% for physician in object_list %}
-<li>
-  <a href="{{ physician.get_absolute_url }}">{{ physician.name }}</a>
-  <a role="button" href="{{ physician.get_delete_url }}" class="btn btn-danger">
+<div class="container">
+{% for obj in object_list %}
+<div class="py-2 row">
+  <a class="col-11" href="{{ obj.get_absolute_url }}">{{ obj.name }}</a>
+  <a role="button" href="{{ obj.get_delete_url }}" class="col-1 btn btn-sm btn-outline-danger">
   delete
   </a>
-</li>
+</div>
 {% empty %}
-<li>no physicians yet</li>
+<div class="row">no physicians yet</div>
 {% endfor %}
-</ul>
+</div>
 
 {% endblock %}
