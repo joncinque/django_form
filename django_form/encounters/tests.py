@@ -1,9 +1,11 @@
+from datetime import datetime, timedelta, timezone
+
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
 from .forms import PatientForm
-from .models import Patient
+from .models import Facility, Patient, Physician, Encounter
 
 TEST_PATIENT1 = {
     'name': 'TestPatient1',
@@ -25,8 +27,53 @@ TEST_PATIENT3 = {
 }
 TEST_PATIENTS = [TEST_PATIENT1, TEST_PATIENT2, TEST_PATIENT3]
 
+TEST_FACILITY1 = {
+    'name': 'Facility1',
+    'admin': 'Admin1',
+    'address': 'Address1',
+    'phone': '(111) 111-1111',
+}
+TEST_FACILITY2 = {
+    'name': 'Facility2',
+    'admin': 'Admin2',
+    'address': 'Address2',
+    'phone': '(222) 222-2222',
+}
+TEST_FACILITIES = [TEST_FACILITY1, TEST_FACILITY2]
+
+
+TEST_PHYSICIAN1 = {
+    'name': 'Physician1',
+    'address': 'Address1',
+    'phone': '(111) 111-1111',
+}
+TEST_PHYSICIAN2 = {
+    'name': 'Physician2',
+    'address': 'Address2',
+    'phone': '(222) 222-2222',
+}
+TEST_PHYSICIANS = [TEST_PHYSICIAN1, TEST_PHYSICIAN2]
+
+
+TEST_ENCOUNTERS = [
+    {
+        'charting': 'Lots of useful information here in free-form',
+        'created': datetime.now(tz=timezone.utc),
+        'last_modified': datetime.now(tz=timezone.utc),
+    },
+    {
+        'charting': 'There was a lot of information to keep track of here.',
+        'created': datetime.now(tz=timezone.utc) - timedelta(days=2),
+        'last_modified': datetime.now(tz=timezone.utc) - timedelta(days=1),
+    },
+]
+
 
 class PatientFormTest(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        [Patient.objects.create(**patient) for patient in TEST_PATIENTS]
 
     def setUp(self):
         self.username = 'testuser'
@@ -60,7 +107,7 @@ class PatientFormTest(TestCase):
         form = PatientForm(TEST_PATIENT2)
         self.assertTrue(form.is_valid())
         form.save()
-        patient_object = Patient.objects.get(name=TEST_PATIENT2['name'])
+        patient_object = Patient.objects.filter(name=TEST_PATIENT2['name']).first()
         for k, v in TEST_PATIENT2.items():
             self.assertEqual(getattr(patient_object, k), v)
         form = PatientForm(instance=patient_object)
@@ -68,7 +115,31 @@ class PatientFormTest(TestCase):
         form.data['email'] = new_email
 
 
+class PhysicianFormTest(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        [Physician.objects.create(**obj) for obj in TEST_PHYSICIANS]
+
+
+class FacilityFormTest(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        [Facility.objects.create(**obj) for obj in TEST_FACILITIES]
+
+
 class EncounterFormTest(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        [Patient.objects.create(**patient) for patient in TEST_PATIENTS]
+        [Facility.objects.create(**obj) for obj in TEST_FACILITIES]
+        [Physician.objects.create(**obj) for obj in TEST_PHYSICIANS]
+        facility = Facility.objects.all().first()
+        patient = Patient.objects.all().first()
+        physician = Physician.objects.all().first()
+        [Encounter.objects.update_or_create(patient=patient, facility=facility, physician=physician, **obj) for obj in TEST_ENCOUNTERS]
 
     def setUp(self):
         self.username = 'testuser'

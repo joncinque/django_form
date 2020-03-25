@@ -28,7 +28,6 @@ class NameListView(ListView):
 class EncounterCreateView(CreateView):
     model = Encounter
     form_class = EncounterForm
-    success_url = reverse_lazy('encounters-list')
     template_name = 'encounters/encounter_form.html'
 
     def get_context_data(self, **kwargs):
@@ -79,7 +78,6 @@ class PatientCreateView(CreateView):
     model = Patient
     template_name = 'encounters/form.html'
     form_class = PatientForm
-    success_url = reverse_lazy('patients-list')
 
 
 class PatientDeleteView(DeleteView):
@@ -102,7 +100,6 @@ class PhysicianCreateView(CreateView):
     model = Physician
     template_name = 'encounters/form.html'
     form_class = PhysicianForm
-    success_url = reverse_lazy('physicians-list')
 
 
 class PhysicianDeleteView(DeleteView):
@@ -125,7 +122,6 @@ class FacilityCreateView(CreateView):
     model = Physician
     template_name = 'encounters/form.html'
     form_class = FacilityForm
-    success_url = reverse_lazy('facilities-list')
 
 
 class FacilityDeleteView(DeleteView):
