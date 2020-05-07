@@ -1,6 +1,6 @@
 [program:{{ repo }}]
-command={{ venv_dir }}/bin/python3 manage.py runserver
-directory={{ repo_dir }}
+command={{ venv_dir }}/bin/uvicorn django_form.asgi:application
+directory={{ app_dir }}
 user={{ user }}
 stdout_logfile={{ repo_dir }}/{{ django_project }}_supervisor
 autostart=true
